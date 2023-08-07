@@ -146,7 +146,7 @@ class Bishop():
         self.opponents = opponents
 
     def __str__(self):
-        return f"BW at {self.position}"
+        return f"B at {self.position}"
 
     def available_moves(self, board):
         result = set()
@@ -203,7 +203,6 @@ class Bishop():
                 break
             u += 1
             l -= 1
-        
 
 
 class Knight():
@@ -213,7 +212,7 @@ class Knight():
         self.opponents = opponents
 
     def __str__(self):
-        return f"NW at {self.position}"
+        return f"N at {self.position}"
 
     def available_moves(self, board):
         i, j = self.position
