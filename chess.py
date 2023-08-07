@@ -4,19 +4,68 @@ from pieces import *
 EMT = None
 
 
+def initial_positions():
+    """
+    Returns starting position of pieces
+    """
+    white = set()
+    for i in range(6, 8):
+        for j in range(0, 8):
+            white.add((i, j))
+    black = set()
+    for i in range(0, 2):
+        for j in range(0, 8):
+            black.add((i, j))
+    return {"white": white, "black": black}
+
+
+def initial_pieces():
+    """
+    Returns starting states of pieces
+    """
+    active = initial_positions()
+    white = {
+        "KW": King((7, 4), active["black"]),
+        "QW": Queen((7, 5), active["black"]),
+        "RW1": Rook((7, 0), "L", active["black"]),
+        "RW2": Rook((7, 7), "R", active["black"]),
+        "BW1": Bishop((7, 2), active["black"]),
+        "BW2": Bishop((7, 5), active["black"]),
+        "NW1": Knight((7, 1), active["black"]),
+        "NW2": Knight((7, 6), active["black"])
+        }
+    for x in range(1, 9):
+        white[f"PW{x}"] = Pawn((6, x-1), "W", active["black"])
+
+    black = {
+        "KB": King((0, 4), active["white"]),
+        "QB": Queen((0, 5), active["white"]),
+        "RB1": Rook((0, 0), "L", active["white"]),
+        "RB2": Rook((0, 7), "R", active["white"]),
+        "BB1": Bishop((0, 2), active["white"]),
+        "BB2": Bishop((0, 5), active["white"]),
+        "NB1": Knight((0, 1), active["white"]),
+        "NB2": Knight((0, 6), active["white"])
+        }
+    for x in range(1, 9):
+        black[f"PB{x}"] = Pawn((1, x-1), "B", active["white"])
+
+    return white, black
+
+
 def initial_board(white, black):
     """
     Returns starting state of the board.
     """
     # Consider another approach: Assign pieces to class from this board
-    # board = [[RB1, NB1, BB1, QB , KB , BB2, NB2, RB2],
-    #         [PB1, PB2, PB3, PB4, PB5, PB6, PB7, PB8],
+    # board = [["RB1", "NB1", "BB1", "QB" , "KB" , "BB2", "NB2", "RB2"],
+    #         ["PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8"],
     #         [EMT, EMT, EMT, EMT, EMT, EMT, EMT, EMT],
     #         [EMT, EMT, EMT, EMT, EMT, EMT, EMT, EMT],
     #         [EMT, EMT, EMT, EMT, EMT, EMT, EMT, EMT],
     #         [EMT, EMT, EMT, EMT, EMT, EMT, EMT, EMT],
-    #         [PW1, PW2, PW3, PW4, PW5, PW6, PW7, PW8],
-    #         [RW1, NW1, BW1, QW , KW , BW2, NW2, RW2]
+    #         ["PW1", "PW2", "PW3", "PW4", "PW5", "PW6", "PW7", "PW8"],
+    #         ["RW1", "NW1", "BW1", "QW" , "KW" , "BW2", "NW2", "RW2"]
     #         ]
     
     # Current approach: Assign pieces to board from class
@@ -40,49 +89,21 @@ def initial_board(white, black):
     return board
 
 
-# Location of pieces
-def get_W_positions(white):
-    result = set()
+def active_pieces(white, black):
+    """
+    Returns positions of active pieces
+    """
+    active_white = set()
     for piece in white:
-        result.add(white[piece].position)
-    return result
-
-def get_B_positions(black):
-    result = set()
+        active_white.add(white[piece].position)
+    
+    active_black = set()
     for piece in black:
-        result.add(black[piece].position)
-    return result
+        active_black.add(black[piece].position)
 
-
-def initial_pieces():
-    white = {
-        "KW": King((7, 4), get_B_positions),
-        "QW": Queen((7, 5), get_B_positions),
-        "RW1": Rook((7, 0), "L", get_B_positions),
-        "RW2": Rook((7, 7), "R", get_B_positions),
-        "BW1": Bishop((7, 2), get_B_positions),
-        "BW2": Bishop((7, 5), get_B_positions),
-        "NW1": Knight((7, 1), get_B_positions),
-        "NW2": Knight((7, 6), get_B_positions)
-        }
-    for x in range(1, 9):
-        white[f"PW{x}"] = Pawn((6, x-1), "W", get_B_positions)
-
-    black = {
-        "KB": King((0, 4), get_W_positions),
-        "QB": Queen((0, 5), get_W_positions),
-        "RB1": Rook((0, 0), "L", get_W_positions),
-        "RB2": Rook((0, 7), "R", get_W_positions),
-        "BB1": Bishop((0, 2), get_W_positions),
-        "BB2": Bishop((0, 5), get_W_positions),
-        "NB1": Knight((0, 1), get_W_positions),
-        "NB2": Knight((0, 6), get_W_positions)
-        }
-    for x in range(1, 9):
-        black[f"PB{x}"] = Pawn((1, x-1), "B", get_W_positions)
-
-    return white, black
+    return {"white": active_white, "black": active_black}
 
 
 white, black = initial_pieces()
 print(initial_board(white, black))
+print(active_pieces(white, black)["white"])
